@@ -3,11 +3,12 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { isEpisodeInFavorites } from "../helpers/favorites";
 import SeasonDetails from "./SeasonDetails";
+import { getGenreTitle } from "../helpers/genres";
 
 const ShowDetails = ({ match, favorites, setFavorites, handleGenreClick }) => {
   const { showId } = useParams();
   const [show, setShow] = useState(null);
-  const [episodes, setEpisodes] = useState([]); 
+  const [episodes, setEpisodes] = useState([]);
 
   const handleFavoriteClick = (episode) => {
     const newFavorite = { ...episode, addedAt: new Date().toISOString() }; // Add the addedAt property
@@ -45,11 +46,13 @@ const ShowDetails = ({ match, favorites, setFavorites, handleGenreClick }) => {
   if (!show) {
     return <p>Loading...</p>;
   }
-
+  const genreTitles = show.genres.map(getGenreTitle);
   return (
     <div>
-      <h1>{show.title}</h1>
+      <h1>{show.title}</h1>{" "}
+      <img src={show.image} alt={show.title} width="100" height="100" />
       <p>{show.description}</p>
+      <div>Genres: {genreTitles.join(", ")}</div>
       <h2>Seasons</h2>
       <ul>
         {show.seasons.map((season) => (
@@ -62,7 +65,6 @@ const ShowDetails = ({ match, favorites, setFavorites, handleGenreClick }) => {
       </ul>
       {episodes.map((episode) => (
         <div key={episode.id}>
-          {/* Display episode title and other information here */}
           <button onClick={() => handleFavoriteClick(episode)}>
             {isEpisodeInFavorites(favorites, episode)
               ? "Remove from favorites"

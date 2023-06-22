@@ -11,7 +11,15 @@ const ShowPreview = ({ show }) => {
   return (
     <div>
       <h2>
-        <Link to={`/shows/${show.id}`}>{show.title}</Link>
+        <Link to={`/shows/${show.id}`}>
+          {show.title}
+          <img
+            src={showData.image}
+            alt={showData.title}
+            width="100"
+            height="100"
+          />
+        </Link>
       </h2>
       <p>
         Genres:{" "}

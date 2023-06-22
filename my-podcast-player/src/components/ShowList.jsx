@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Fuse from "fuse.js";
+import { getGenreTitle } from "../helpers/genres";
 
 const ShowList = () => {
   const [shows, setShows] = useState([]);
@@ -91,22 +92,24 @@ const ShowList = () => {
         <option value="updated_asc">Last Updated (Oldest)</option>
         <option value="updated_desc">Last Updated (Newest)</option>
       </select>
-      <ul>
-        {sortedShows.map((show) => {
-          const showData = show.item ? show.item : show;
-          return (
-            <li key={showData.id}>
-              <Link to={`/shows/${showData.id}`}>{showData.title}</Link>
-            </li>
-          );
-        })}
-      </ul>
+
       <ul>
         {filteredShows.map((show) => {
           const showData = show.item ? show.item : show;
+          const genreTitles = showData.genres.map(getGenreTitle);
+
           return (
             <li key={showData.id}>
-              <Link to={`/shows/${showData.id}`}>{showData.title}</Link>
+              <Link to={`/shows/${showData.id}`}>
+                {showData.title}
+                <img
+                  src={showData.image}
+                  alt={showData.title}
+                  width="100"
+                  height="100"
+                />
+              </Link>
+              <div>Genres: {genreTitles.join(", ")}</div>
             </li>
           );
         })}

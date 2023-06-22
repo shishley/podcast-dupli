@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Fuse from "fuse.js";
 import { getGenreTitle } from "../helpers/genres";
-import "./App.css";
+
 
 const ShowList = () => {
   const [shows, setShows] = useState([]);

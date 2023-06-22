@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./App.css";
+
 
 const Favorites = ({ favorites }) => {
   if (favorites.length === 0) {

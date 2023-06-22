@@ -4,7 +4,7 @@ import axios from "axios";
 import { isEpisodeInFavorites } from "../helpers/favorites";
 import SeasonDetails from "./SeasonDetails";
 import { getGenreTitle } from "../helpers/genres";
-import "./App.css";
+
 
 const ShowDetails = ({ match, favorites, setFavorites, handleGenreClick }) => {
   const { showId } = useParams();

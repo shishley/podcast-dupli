@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { getGenreTitle } from "../helpers/genres";
-import "./App.css";
+
 
 const ShowPreview = ({ show }) => {
   const lastUpdated = new Date(show.updated).toLocaleDateString();

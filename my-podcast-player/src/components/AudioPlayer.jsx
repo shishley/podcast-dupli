@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from "react";
-import "./App.css";
 
 const AudioPlayer = ({ src, userProgress, setUserProgress }) => {
   const audioRef = useRef();

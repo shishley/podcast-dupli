@@ -7,7 +7,7 @@ import SeasonDetails from "./SeasonDetails";
 const ShowDetails = ({ match, favorites, setFavorites, handleGenreClick }) => {
   const { showId } = useParams();
   const [show, setShow] = useState(null);
-  const [episodes, setEpisodes] = useState([]); // Add this state for episodes
+  const [episodes, setEpisodes] = useState([]); 
 
   const handleFavoriteClick = (episode) => {
     const newFavorite = { ...episode, addedAt: new Date().toISOString() }; // Add the addedAt property

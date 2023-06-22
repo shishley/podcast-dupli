@@ -4,6 +4,9 @@ import { getGenreTitle } from "../helpers/genres";
 
 const ShowPreview = ({ show }) => {
   const lastUpdated = new Date(show.updated).toLocaleDateString();
+  <p>
+    Genres: {show.genreIds.map((genreId) => getGenreTitle(genreId)).join(", ")}
+  </p>;
 
   return (
     <div>

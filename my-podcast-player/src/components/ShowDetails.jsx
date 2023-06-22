@@ -4,6 +4,7 @@ import axios from "axios";
 import { isEpisodeInFavorites } from "../helpers/favorites";
 import SeasonDetails from "./SeasonDetails";
 import { getGenreTitle } from "../helpers/genres";
+import "./App.css";
 
 const ShowDetails = ({ match, favorites, setFavorites, handleGenreClick }) => {
   const { showId } = useParams();
@@ -11,7 +12,7 @@ const ShowDetails = ({ match, favorites, setFavorites, handleGenreClick }) => {
   const [episodes, setEpisodes] = useState([]);
 
   const handleFavoriteClick = (episode) => {
-    const newFavorite = { ...episode, addedAt: new Date().toISOString() }; // Add the addedAt property
+    const newFavorite = { ...episode, addedAt: new Date().toISOString() }; 
 
     if (!favorites.some((fav) => fav.id === episode.id)) {
       setFavorites((prevFavorites) => [...prevFavorites, newFavorite]);
@@ -30,7 +31,7 @@ const ShowDetails = ({ match, favorites, setFavorites, handleGenreClick }) => {
         );
         setShow(response.data);
 
-        // Extract episodes from the response and set it to the state
+       
         const allEpisodes = response.data.seasons.flatMap(
           (season) => season.episodes
         );

@@ -4,9 +4,9 @@ import axios from "axios";
 import Fuse from "fuse.js";
 import { getGenreTitle } from "../helpers/genres";
 
-
 const ShowList = () => {
   const [shows, setShows] = useState([]);
+  const [numberOfSeasons, setNumberOfSeasons] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [sortType, setSortType] = useState("title_asc");
   const [genreFilter, setGenreFilter] = useState(null);
@@ -18,6 +18,16 @@ const ShowList = () => {
           "https://podcast-api.netlify.app/shows"
         );
         setShows(response.data);
+        const updatedNumberOfSeasons = {};
+        await Promise.all(
+          response.data.map(async (show) => {
+            const showResponse = await axios.get(
+              `https://podcast-api.netlify.app/id/${show.id}`
+            );
+            updatedNumberOfSeasons[show.id] = showResponse.data.seasons.length;
+          })
+        );
+        setNumberOfSeasons(updatedNumberOfSeasons);
       } catch (error) {
         console.error("Error fetching shows:", error);
       }
@@ -111,6 +121,7 @@ const ShowList = () => {
                 />
               </Link>
               <div>Genres: {genreTitles.join(", ")}</div>
+              <div>Seasons: {numberOfSeasons[showData.id]}</div>
             </li>
           );
         })}

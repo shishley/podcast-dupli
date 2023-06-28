@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Fuse from "fuse.js";
 import { getGenreTitle } from "../helpers/genres";
+import { formatDate } from "../helpers/formatDate";
 
 const ShowList = () => {
   const [shows, setShows] = useState([]);
@@ -17,10 +18,20 @@ const ShowList = () => {
         const response = await axios.get(
           "https://podcast-api.netlify.app/shows"
         );
-        setShows(response.data);
+        const fetchedShows = response.data.map((show) => ({
+          id: show.id,
+          title: show.title,
+          description: show.description,
+          seasons: show.seasons,
+          image: show.image,
+          genres: show.genres,
+          lastUpdatedAt: new Date(show.updated),
+        }));
+        setShows(fetchedShows);
+
         const updatedNumberOfSeasons = {};
         await Promise.all(
-          response.data.map(async (show) => {
+          fetchedShows.map(async (show) => {
             const showResponse = await axios.get(
               `https://podcast-api.netlify.app/id/${show.id}`
             );
@@ -117,6 +128,7 @@ const ShowList = () => {
         {filteredShows.map((show) => {
           const showData = show.item ? show.item : show;
           const genreTitles = showData.genres.map(getGenreTitle);
+          const readableDate = formatDate(showData.lastUpdatedAt);
 
           return (
             <li key={showData.id}>
@@ -131,6 +143,7 @@ const ShowList = () => {
               </Link>
               <div>Genres: {genreTitles.join(", ")}</div>
               <div>Seasons: {numberOfSeasons[showData.id]}</div>
+              <div>Last Updated: {readableDate}</div>
             </li>
           );
         })}

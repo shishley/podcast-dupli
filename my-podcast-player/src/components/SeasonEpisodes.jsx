@@ -5,8 +5,9 @@ import { isEpisodeInFavorites } from "../helpers/favorites";
 const SeasonEpisodes = ({ favorites, setFavorites }) => {
   const { showId, season } = useParams();
   const [show, setShow] = useState(null);
-  const [episodesInSeason, setEpisodesInSeason] = useState(null);
+  const [episodesInSeason, setEpisodesInSeason] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const handleFavoriteClick = (episode) => {
     const newFavorite = {
       showId: show.id,
@@ -26,6 +27,7 @@ const SeasonEpisodes = ({ favorites, setFavorites }) => {
       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
     }
   };
+
   useEffect(() => {
     const fetchShow = async () => {
       try {
@@ -67,11 +69,11 @@ const SeasonEpisodes = ({ favorites, setFavorites }) => {
   return (
     <div>
       <h1>Season {season}</h1>
-      <h2>Episodes</h2>{" "}
+      <h2>Episodes</h2>
       {episodesInSeason.length > 0 ? (
         <ul>
           {episodesInSeason.map((episode) => {
-            const uniqueKey = `season-${season}-episode-${episode.episode}`;
+            const isInFavorites = isEpisodeInFavorites(favorites, episode);
             return (
               <li key={episode.id}>
                 <h3>{episode.title}</h3>
@@ -84,9 +86,7 @@ const SeasonEpisodes = ({ favorites, setFavorites }) => {
                   Your browser does not support the audio element.
                 </audio>
                 <button onClick={() => handleFavoriteClick(episode)}>
-                  {isEpisodeInFavorites(favorites, episode)
-                    ? "Remove from favorites"
-                    : "Add to favorites"}
+                  {isInFavorites ? "Remove from favorites" : "Add to favorites"}
                 </button>
               </li>
             );

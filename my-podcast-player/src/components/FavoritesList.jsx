@@ -24,7 +24,9 @@ const FavoritesList = ({ favorites, setFavorites }) => {
   });
 
   const removeFromFavorites = (episode) => {
-    const updatedFavorites = favorites.filter((fav) => fav.id !== episode.id);
+    const updatedFavorites = favorites.filter(
+      (fav) => fav.episode.id !== episode.id
+    );
     setFavorites(updatedFavorites);
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };

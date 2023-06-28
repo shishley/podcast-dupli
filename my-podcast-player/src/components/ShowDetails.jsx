@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
 import { isEpisodeInFavorites } from "../helpers/favorites";
 import { getGenreTitle } from "../helpers/genres";
 
@@ -13,21 +12,24 @@ const ShowDetails = ({ match, favorites, setFavorites, handleGenreClick }) => {
     const newFavorite = { ...episode, addedAt: new Date().toISOString() };
 
     if (!favorites.some((fav) => fav.id === episode.id)) {
-      setFavorites((prevFavorites) => [...prevFavorites, newFavorite]);
+      const updatedFavorites = [...favorites, newFavorite];
+      setFavorites(updatedFavorites);
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
     } else {
-      setFavorites((prevFavorites) =>
-        prevFavorites.filter((fav) => fav.id !== episode.id)
-      );
+      const updatedFavorites = favorites.filter((fav) => fav.id !== episode.id);
+      setFavorites(updatedFavorites);
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
     }
   };
 
   useEffect(() => {
     const fetchShow = async () => {
       try {
-        const response = await axios.get(
+        const response = await fetch(
           `https://podcast-api.netlify.app/id/${showId}`
         );
-        setShow(response.data);
+        const data = await response.json();
+        setShow(data);
       } catch (error) {
         console.error("Error fetching show details:", error);
       }
@@ -46,16 +48,16 @@ const ShowDetails = ({ match, favorites, setFavorites, handleGenreClick }) => {
       <p>{show.description}</p>
       <p>
         Genres:{" "}
-        {show.genres
-          ? show.genres.map((genreId) => getGenreTitle(genreId)).join(", ")
+        {show.genreIds
+          ? show.genreIds.map((genreId) => getGenreTitle(genreId)).join(", ")
           : "unknown"}
       </p>
       <h2>Seasons</h2>
       <ul>
         {show.seasons.map((season) => (
-          <li key={season.id}>
-            <Link to={`/shows/${show.id}/seasons/${season.id}`}>
-              Season {season.number}
+          <li key={season.season}>
+            <Link to={`/shows/${show.id}/seasons/${season.season}`}>
+              Season {season.season}
             </Link>
           </li>
         ))}

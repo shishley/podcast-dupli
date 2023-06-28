@@ -5,6 +5,7 @@ import ShowList from "./components/ShowList";
 import ShowDetails from "./components/ShowDetails";
 import AudioPlayer from "./components/AudioPlayer";
 import SeasonEpisodes from "./components/SeasonEpisodes";
+import FavoritesList from "./components/FavoritesList";
 
 function App() {
   const [favorites, setFavorites] = useState([]);
@@ -32,13 +33,20 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<ShowList />} />
-          <Route path="/shows/:showId" element={<ShowDetails />} />
           <Route
-            path="/shows/:showId/seasons/:seasonId"
-            element={React.createElement(SeasonEpisodes, {
-              favorites: favorites,
-              setFavorites: setFavorites,
-            })}
+            path="/shows/:showId"
+            element={
+              <ShowDetails favorites={favorites} setFavorites={setFavorites} />
+            }
+          />
+          <Route
+            path="/shows/:showId/seasons/:season"
+            element={
+              <SeasonEpisodes
+                favorites={favorites}
+                setFavorites={setFavorites}
+              />
+            }
           />
         </Routes>
       </Router>

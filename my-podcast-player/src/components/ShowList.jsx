@@ -103,7 +103,16 @@ const ShowList = () => {
         <option value="updated_asc">Last Updated (Oldest)</option>
         <option value="updated_desc">Last Updated (Newest)</option>
       </select>
-
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/favorites">Favorites</Link>
+          </li>
+        </ul>
+      </nav>
       <ul>
         {filteredShows.map((show) => {
           const showData = show.item ? show.item : show;

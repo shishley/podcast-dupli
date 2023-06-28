@@ -48,6 +48,15 @@ function App() {
               />
             }
           />
+          <Route
+            path="/favorites"
+            element={
+              <FavoritesList
+                favorites={favorites}
+                setFavorites={setFavorites}
+              />
+            }
+          />
         </Routes>
       </Router>
       <footer className="App-footer">

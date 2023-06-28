@@ -8,14 +8,20 @@ const SeasonEpisodes = ({ favorites, setFavorites }) => {
   const [episodesInSeason, setEpisodesInSeason] = useState(null);
   const [loading, setLoading] = useState(true);
   const handleFavoriteClick = (episode) => {
-    const newFavorite = { ...episode, addedAt: new Date().toISOString() };
+    const newFavorite = {
+      showId: show.id,
+      seasonId: parseInt(season),
+      episode: { ...episode, addedAt: new Date().toISOString() },
+    };
 
-    if (!favorites.some((fav) => fav.id === episode.id)) {
+    if (!favorites.some((fav) => fav.episode.id === episode.id)) {
       const updatedFavorites = [...favorites, newFavorite];
       setFavorites(updatedFavorites);
       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
     } else {
-      const updatedFavorites = favorites.filter((fav) => fav.id !== episode.id);
+      const updatedFavorites = favorites.filter(
+        (fav) => fav.episode.id !== episode.id
+      );
       setFavorites(updatedFavorites);
       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
     }

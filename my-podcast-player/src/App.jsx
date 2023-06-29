@@ -23,6 +23,10 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    console.log("favorites state updated:", favorites);
+  }, [favorites]);
+
   const resetProgress = () => {
     setUserProgress({});
     localStorage.removeItem("userProgress");

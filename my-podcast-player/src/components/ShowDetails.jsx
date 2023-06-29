@@ -41,17 +41,13 @@ const ShowDetails = ({ match, favorites, setFavorites, handleGenreClick }) => {
   if (!show) {
     return <p>Loading...</p>;
   }
+  console.log("Show details:", show);
   return (
     <div>
       <h1>{show.title}</h1>{" "}
       <img src={show.image} alt={show.title} width="100" height="100" />
       <p>{show.description}</p>
-      <p>
-        Genres:{" "}
-        {show.genreIds
-          ? show.genreIds.map((genreId) => getGenreTitle(genreId)).join(", ")
-          : "unknown"}
-      </p>
+      <p>Genres: {show.genres ? show.genres.join(", ") : "unknown"}</p>
       <h2>Seasons</h2>
       <ul>
         {show.seasons.map((season) => (
@@ -59,6 +55,12 @@ const ShowDetails = ({ match, favorites, setFavorites, handleGenreClick }) => {
             <Link to={`/shows/${show.id}/seasons/${season.season}`}>
               Season {season.season}
             </Link>
+            <img
+              src={season.image}
+              alt={`Season ${season.season} cover`}
+              width="100"
+              height="100"
+            />
           </li>
         ))}
       </ul>

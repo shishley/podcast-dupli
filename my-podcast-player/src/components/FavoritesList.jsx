@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { formatDate } from "../helpers/formatDate";
 
 const FavoritesList = ({ favorites, setFavorites }) => {
+  useEffect(() => {}, [favorites]);
   const groupedFavorites = {};
 
   favorites.forEach((favorite) => {
@@ -68,6 +70,7 @@ const FavoritesList = ({ favorites, setFavorites }) => {
           ))}
         </div>
       ))}
+      <Link to="/">Back to show list</Link>
     </div>
   );
 };

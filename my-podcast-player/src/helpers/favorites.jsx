@@ -1,3 +1,11 @@
 export const isEpisodeInFavorites = (favorites, episode) => {
-  return favorites.some((fav) => fav.episode.id === episode.id);
+  const result = favorites.some(
+    (fav) =>
+      fav.episode.id === episode.id &&
+      fav.showId === episode.showId &&
+      fav.seasonId === episode.seasonId
+  );
+
+  console.log("isEpisodeInFavorites returns:", result);
+  return result;
 };

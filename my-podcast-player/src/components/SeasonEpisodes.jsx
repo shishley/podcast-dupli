@@ -11,11 +11,15 @@ const SeasonEpisodes = ({ favorites, setFavorites }) => {
   const handleFavoriteClick = (episode) => {
     const newFavorite = {
       showId: show.id,
+      showTitle: show.title,
       seasonId: parseInt(season),
+      seasonTitle: `Season ${season}`,
       episode: { ...episode, addedAt: new Date().toISOString() },
     };
 
-    if (!favorites.some((fav) => fav.episode.id === episode.id)) {
+    const isInFavorites = isEpisodeInFavorites(favorites, episode);
+
+    if (!isInFavorites) {
       const updatedFavorites = [...favorites, newFavorite];
       setFavorites(updatedFavorites);
       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
@@ -27,7 +31,6 @@ const SeasonEpisodes = ({ favorites, setFavorites }) => {
       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
     }
   };
-
   useEffect(() => {
     const fetchShow = async () => {
       try {

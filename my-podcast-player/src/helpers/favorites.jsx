@@ -1,7 +1,7 @@
 export const isEpisodeInFavorites = (favorites, episode) => {
   const result = favorites.some(
     (fav) =>
-      fav.episode.id === episode.id &&
+      fav.episode === episode &&
       fav.showId === episode.showId &&
       fav.seasonId === episode.seasonId
   );

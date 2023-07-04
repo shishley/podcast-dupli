@@ -54,11 +54,16 @@ const FavoritesList = ({ favorites, setFavorites }) => {
     groupedFavorites[showId].seasons[seasonId].episodes.push(episode);
   });
 
-  const removeFromFavorites = (episode) => {
-    const updatedFavorites = favorites.filter((fav) => fav.episode !== episode.id);
+  //
+  const removeFromFavorites = (episodeToRemove) => {
+    const updatedFavorites = favorites.filter(
+      (favorite) => favorite.episode.id !== episodeToRemove.id
+    );
     setFavorites(updatedFavorites);
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
+  //
+
   return (
     <div>
       <h2>Favorites</h2>
@@ -93,7 +98,7 @@ const FavoritesList = ({ favorites, setFavorites }) => {
                         <strong>Episode:</strong> {episode.episode}
                       </p>
                       <p>{episode.description}</p>
-                      <p>Added on {formatDate(new Date(episode.addedAt))}</p> //
+                      <p>Added on {formatDate(new Date(episode.addedAt))}</p>
                       <audio controls>
                         <source src={episode.file} type="audio/mpeg" />
                         Your browser does not support the audio element.

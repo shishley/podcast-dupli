@@ -27,10 +27,27 @@ function App() {
     console.log("favorites state updated:", favorites);
   }, [favorites]);
 
+  //
+  useEffect(() => {
+    // Show reset confirmation dialog
+    window.addEventListener("beforeunload", (e) => {
+      e.preventDefault();
+      if (Object.keys(userProgress).length > 0 || favorites.length > 0) {
+        e.returnValue = "";
+        return "";
+      }
+    });
+  }, [userProgress, favorites]);
+
   const resetProgress = () => {
-    setUserProgress({});
-    localStorage.removeItem("userProgress");
+    if (window.confirm("Are you sure you want to reset all progress?")) {
+      setUserProgress({});
+      localStorage.removeItem("userProgress");
+      setFavorites([]);
+      localStorage.removeItem("favorites");
+    }
   };
+  //
 
   return (
     <div className="App">
@@ -69,7 +86,7 @@ function App() {
           userProgress={userProgress}
           setUserProgress={setUserProgress}
         />
-        <button onClick={resetProgress}>Reset progress</button>
+        <button onClick={resetProgress}>Reset all progress</button>
       </footer>
     </div>
   );

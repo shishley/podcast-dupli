@@ -10,6 +10,7 @@ const FavoritesList = ({ favorites, setFavorites }) => {
   const [sortOrder, setSortOrder] = useState("none"); //
   useEffect(() => {}, [favorites]);
   //
+
   const sortedEpisodes = (episodes) => {
     if (sortOrder === "titleAZ") {
       return [...episodes].sort((a, b) => a.title.localeCompare(b.title));
@@ -17,11 +18,11 @@ const FavoritesList = ({ favorites, setFavorites }) => {
       return [...episodes].sort((a, b) => b.title.localeCompare(a.title));
     } else if (sortOrder === "recent") {
       return [...episodes].sort(
-        (a, b) => new Date(b.addedAt) - new Date(a.addedAt)
+        (a, b) => new Date(b.showUpdated) - new Date(a.showUpdated)
       );
     } else if (sortOrder === "oldest") {
       return [...episodes].sort(
-        (a, b) => new Date(a.addedAt) - new Date(b.addedAt)
+        (a, b) => new Date(a.showUpdated) - new Date(b.showUpdated)
       );
     } else {
       return episodes;

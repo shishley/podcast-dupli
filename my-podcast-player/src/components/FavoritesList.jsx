@@ -36,17 +36,18 @@ const FavoritesList = ({ favorites, setFavorites }) => {
   const groupedFavorites = {};
 
   favorites.forEach((favorite) => {
-    const { showId, seasonId, episode } = favorite;
+    const { showId, seasonId, episode, showUpdated, seasonTitle } = favorite;
     if (!groupedFavorites[showId]) {
       groupedFavorites[showId] = {
         showTitle: episode.showTitle,
+        updated: new Date(showUpdated),
         seasons: {},
       };
     }
 
     if (!groupedFavorites[showId].seasons[seasonId]) {
       groupedFavorites[showId].seasons[seasonId] = {
-        seasonTitle: episode.seasonTitle,
+        seasonTitle: seasonTitle,
         episodes: [],
       };
     }
@@ -80,6 +81,12 @@ const FavoritesList = ({ favorites, setFavorites }) => {
           <h3>
             <Link to={`/shows/${showId}`}>{show.showTitle}</Link>
           </h3>
+          <p>
+            Last updated:{" "}
+            {show.updated === "Unknown"
+              ? "Unknown"
+              : formatDate(new Date(show.updated))}
+          </p>
           {Object.entries(show.seasons).map(([seasonId, season]) => (
             <div key={seasonId}>
               <h4>
@@ -97,6 +104,10 @@ const FavoritesList = ({ favorites, setFavorites }) => {
                       <p>
                         <strong>Episode:</strong> {episode.episode}
                       </p>
+                      <p>
+                        <strong>Season:</strong> {season.seasonTitle}
+                      </p>
+
                       <p>{episode.description}</p>
                       <p>Added on {formatDate(new Date(episode.addedAt))}</p>
                       <audio controls>

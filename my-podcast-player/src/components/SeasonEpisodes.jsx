@@ -15,6 +15,7 @@ const SeasonEpisodes = ({ favorites, setFavorites }) => {
       seasonId: parseInt(season),
       seasonTitle: `Season ${season}`,
       episode: { ...episode, addedAt: new Date().toISOString() },
+      showUpdated: show.updated || "Unknown",
     };
 
     const isInFavorites = isEpisodeInFavorites(favorites, episode);

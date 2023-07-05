@@ -1,9 +1,17 @@
 export const formatDate = (date) => {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
+  // Check if the input is a valid date
+  if (isNaN(date) || !date) {
+    return "Unknown";
+  }
+
+  const options = {
     year: "numeric",
+    month: "long",
+    day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-  }).format(date);
+    timeZoneName: "short",
+  };
+
+  return new Intl.DateTimeFormat("en-US", options).format(new Date(date));
 };

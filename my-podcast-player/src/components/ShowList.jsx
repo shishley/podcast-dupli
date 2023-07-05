@@ -90,7 +90,11 @@ const ShowList = () => {
   const handleGenreClick = (genre) => {
     setGenreFilter(genre);
   };
-
+  //
+  const handleClearFilter = () => {
+    setGenreFilter(null);
+  };
+  //
   const filteredShows = genreFilter
     ? sortedShows.filter((show) =>
         show.item
@@ -124,10 +128,17 @@ const ShowList = () => {
           </li>
         </ul>
       </nav>
+
+      <button onClick={handleClearFilter}>Clear Genre Filter</button>
+
       <ul>
         {filteredShows.map((show) => {
           const showData = show.item ? show.item : show;
-          const genreTitles = showData.genres.map(getGenreTitle);
+          const genreTitles = showData.genres.map((genreId) => (
+            <button key={genreId} onClick={() => handleGenreClick(genreId)}>
+              {getGenreTitle(genreId)}
+            </button>
+          ));
           const readableDate = formatDate(showData.lastUpdatedAt);
 
           return (
@@ -141,7 +152,7 @@ const ShowList = () => {
                   height="100"
                 />
               </Link>
-              <div>Genres: {genreTitles.join(", ")}</div>
+              <div>Genres: {genreTitles}</div>
               <div>Seasons: {numberOfSeasons[showData.id]}</div>
               <div>Last Updated: {readableDate}</div>
             </li>

@@ -1,37 +1,46 @@
 import React, { useRef, useEffect, useState } from "react";
 
-const AudioPlayer = ({ src, userProgress, setUserProgress }) => {
+const AudioPlayer = ({ src, episodeId, userProgress, updateUserProgress }) => {
   const audioRef = useRef();
   const [playing, setPlaying] = useState(false);
 
-  const handleTimeUpdate = (e) => {
-    // Save progress every 10 seconds
-    if (Math.floor(e.target.currentTime) % 10 === 0) {
-      setUserProgress((prevState) => {
-        const newProgress = { ...prevState, [src]: e.target.currentTime };
-        localStorage.setItem("userProgress", JSON.stringify(newProgress));
-        return newProgress;
-      });
+  useEffect(() => {
+    // Update audio player's currentTime based on user progress
+    if (episodeId && userProgress && userProgress[episodeId]) {
+      audioRef.current.currentTime = userProgress[episodeId];
     }
-  };
+  }, [src, episodeId, userProgress]);
 
   useEffect(() => {
-    // Show confirm dialog when page closes
-    window.addEventListener("beforeunload", (e) => {
-      e.preventDefault();
-      e.returnValue = "";
-      return "";
-    });
+    const handleBeforeUnload = (e) => {
+      if (playing) {
+        e.preventDefault();
+        e.returnValue =
+          "Are you sure you want to leave? The audio is still playing.";
+        return e.returnValue;
+      }
+    };
 
-    // Update audio player's currentTime based on user progress
-    if (userProgress[src]) {
-      audioRef.current.currentTime = userProgress[src];
-      setPlaying(true);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [playing]);
+
+  const togglePlay = () => {
+    if (playing) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
     }
-  }, [src, userProgress]);
-
-  const handlePlayPause = () => {
     setPlaying(!playing);
+  };
+
+  const handleTimeUpdate = () => {
+    if (episodeId) {
+      updateUserProgress(episodeId, audioRef.current.currentTime);
+    }
   };
 
   return (
@@ -45,7 +54,7 @@ const AudioPlayer = ({ src, userProgress, setUserProgress }) => {
         onPause={() => setPlaying(false)}
       ></audio>
       {playing && <p>Audio playing</p>}
-      <button onClick={handlePlayPause}>{playing ? "Pause" : "Resume"}</button>
+      <button onClick={togglePlay}>{playing ? "Pause" : "Resume"}</button>
     </div>
   );
 };

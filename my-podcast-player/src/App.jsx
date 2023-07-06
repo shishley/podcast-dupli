@@ -47,7 +47,12 @@ function App() {
       localStorage.removeItem("favorites");
     }
   };
-  //
+  const updateUserProgress = (episodeId, currentTime) => {
+    setUserProgress((prevProgress) => ({
+      ...prevProgress,
+      [episodeId]: currentTime,
+    }));
+  };
 
   return (
     <div className="App">
@@ -66,6 +71,8 @@ function App() {
               <SeasonEpisodes
                 favorites={favorites}
                 setFavorites={setFavorites}
+                userProgress={userProgress}
+                updateUserProgress={updateUserProgress}
               />
             }
           />
@@ -81,11 +88,6 @@ function App() {
         </Routes>
       </Router>
       <footer className="App-footer">
-        <AudioPlayer
-          src="https://example.com/path/to/your/audio/file.mp3"
-          userProgress={userProgress}
-          setUserProgress={setUserProgress}
-        />
         <button onClick={resetProgress}>Reset all progress</button>
       </footer>
     </div>

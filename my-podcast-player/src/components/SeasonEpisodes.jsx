@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { isEpisodeInFavorites } from "../helpers/favorites";
+import AudioPlayer from "./AudioPlayer";
 
-const SeasonEpisodes = ({ favorites, setFavorites }) => {
+const SeasonEpisodes = ({
+  favorites,
+  setFavorites,
+  userProgress,
+  updateUserProgress,
+}) => {
   const { showId, season } = useParams();
   const [show, setShow] = useState(null);
   const [episodesInSeason, setEpisodesInSeason] = useState([]);
@@ -85,10 +91,12 @@ const SeasonEpisodes = ({ favorites, setFavorites }) => {
                   <strong>Episode:</strong> {episode.episode}
                 </p>
                 <p>{episode.description}</p>
-                <audio controls>
-                  <source src={episode.file} type="audio/mpeg" />
-                  Your browser does not support the audio element.
-                </audio>
+                <AudioPlayer
+                  src={episode.file}
+                  episodeId={episode.id}
+                  userProgress={userProgress}
+                  updateUserProgress={updateUserProgress}
+                />
                 <button onClick={() => handleFavoriteClick(episode)}>
                   {isInFavorites ? "Remove from favorites" : "Add to favorites"}
                 </button>

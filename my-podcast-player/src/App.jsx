@@ -10,6 +10,8 @@ import FavoritesList from "./components/FavoritesList";
 function App() {
   const [favorites, setFavorites] = useState([]);
   const [userProgress, setUserProgress] = useState({});
+  const [currentEpisode, setCurrentEpisode] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     const storedFavorites = JSON.parse(localStorage.getItem("favorites"));
@@ -53,7 +55,6 @@ function App() {
       [episodeId]: currentTime,
     }));
   };
-
   return (
     <div className="App">
       <Router>
@@ -73,6 +74,10 @@ function App() {
                 setFavorites={setFavorites}
                 userProgress={userProgress}
                 updateUserProgress={updateUserProgress}
+                currentEpisode={currentEpisode}
+                setCurrentEpisode={setCurrentEpisode}
+                isPlaying={isPlaying}
+                setIsPlaying={setIsPlaying}
               />
             }
           />
@@ -86,6 +91,14 @@ function App() {
             }
           />
         </Routes>
+        <AudioPlayer
+          src={currentEpisode?.file}
+          episodeId={currentEpisode?.id}
+          userProgress={userProgress}
+          updateUserProgress={updateUserProgress}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+        />
       </Router>
       <footer className="App-footer">
         <button onClick={resetProgress}>Reset all progress</button>

@@ -1,8 +1,14 @@
 import React, { useRef, useEffect, useState } from "react";
 
-const AudioPlayer = ({ src, episodeId, userProgress, updateUserProgress }) => {
+const AudioPlayer = ({
+  src,
+  episodeId,
+  userProgress,
+  updateUserProgress,
+  isPlaying,
+  setIsPlaying,
+}) => {
   const audioRef = useRef();
-  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     // Update audio player's currentTime based on user progress
@@ -13,7 +19,7 @@ const AudioPlayer = ({ src, episodeId, userProgress, updateUserProgress }) => {
 
   useEffect(() => {
     const handleBeforeUnload = (e) => {
-      if (playing) {
+      if (isPlaying) {
         e.preventDefault();
         e.returnValue =
           "Are you sure you want to leave? The audio is still playing.";
@@ -26,15 +32,18 @@ const AudioPlayer = ({ src, episodeId, userProgress, updateUserProgress }) => {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [playing]);
+  }, [isPlaying]);
+
+  useEffect(() => {
+    if (isPlaying) {
+      audioRef.current.play();
+    } else {
+      audioRef.current.pause();
+    }
+  }, [isPlaying]);
 
   const togglePlay = () => {
-    if (playing) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
-    setPlaying(!playing);
+    setIsPlaying(!isPlaying);
   };
 
   const handleTimeUpdate = () => {
@@ -50,11 +59,11 @@ const AudioPlayer = ({ src, episodeId, userProgress, updateUserProgress }) => {
         src={src}
         controls
         onTimeUpdate={handleTimeUpdate}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
       ></audio>
-      {playing && <p>Audio playing</p>}
-      <button onClick={togglePlay}>{playing ? "Pause" : "Resume"}</button>
+      {isPlaying && <p>Audio playing</p>}
+      <button onClick={togglePlay}>{isPlaying ? "Pause" : "Resume"}</button>
     </div>
   );
 };

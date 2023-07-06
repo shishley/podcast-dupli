@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { isEpisodeInFavorites } from "../helpers/favorites";
-import AudioPlayer from "./AudioPlayer";
 
 const SeasonEpisodes = ({
   favorites,
   setFavorites,
   userProgress,
   updateUserProgress,
+  currentEpisode,
+  setCurrentEpisode,
+  isPlaying,
+  setIsPlaying,
 }) => {
   const { showId, season } = useParams();
   const [show, setShow] = useState(null);
@@ -91,12 +94,14 @@ const SeasonEpisodes = ({
                   <strong>Episode:</strong> {episode.episode}
                 </p>
                 <p>{episode.description}</p>
-                <AudioPlayer
-                  src={episode.file}
-                  episodeId={episode.id}
-                  userProgress={userProgress}
-                  updateUserProgress={updateUserProgress}
-                />
+                <button
+                  onClick={() => {
+                    setCurrentEpisode(episode);
+                    setIsPlaying(true);
+                  }}
+                >
+                  Play
+                </button>
                 <button onClick={() => handleFavoriteClick(episode)}>
                   {isInFavorites ? "Remove from favorites" : "Add to favorites"}
                 </button>

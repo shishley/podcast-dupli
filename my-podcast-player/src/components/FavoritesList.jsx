@@ -7,9 +7,15 @@ import { formatDate } from "../helpers/formatDate";
 //
 
 const FavoritesList = ({ favorites, setFavorites }) => {
-  const [sortOrder, setSortOrder] = useState("none"); //
-  useEffect(() => {}, [favorites]);
-  //
+  const [sortOrder, setSortOrder] = useState("none");
+
+  useEffect(() => {
+    // empty function will cause a re-render when sortOrder or favorites change
+  }, [sortOrder, favorites]);
+
+  const handleSortChange = (event) => {
+    setSortOrder(event.target.value);
+  };
 
   const sortedEpisodes = (episodes) => {
     if (sortOrder === "titleAZ") {
@@ -29,11 +35,6 @@ const FavoritesList = ({ favorites, setFavorites }) => {
     }
   };
 
-  const handleSortChange = (event) => {
-    setSortOrder(event.target.value);
-  };
-  //
-
   const groupedFavorites = {};
 
   favorites.forEach((favorite) => {
@@ -41,7 +42,7 @@ const FavoritesList = ({ favorites, setFavorites }) => {
     if (!groupedFavorites[showId]) {
       groupedFavorites[showId] = {
         showTitle: episode.showTitle,
-        updated: new Date(showUpdated),
+        updated: showUpdated ? new Date(showUpdated) : "Unknown",
         seasons: {},
       };
     }
@@ -56,7 +57,40 @@ const FavoritesList = ({ favorites, setFavorites }) => {
     groupedFavorites[showId].seasons[seasonId].episodes.push(episode);
   });
 
-  //
+  // Flatten episodes array
+  const allEpisodes = [];
+  Object.values(groupedFavorites).forEach((show) => {
+    Object.values(show.seasons).forEach((season) => {
+      season.episodes.forEach((episode) => {
+        allEpisodes.push({ ...episode, seasonTitle: season.seasonTitle });
+      });
+    });
+  });
+
+  // Sort all episodes based on the sortOrder state
+  const sortedAllEpisodes = sortedEpisodes(allEpisodes);
+
+  // Re-group episodes by show and season after sorting
+  const sortedGroupedFavorites = {};
+  sortedAllEpisodes.forEach((episode) => {
+    const { showId, seasonId, seasonTitle } = episode;
+
+    if (!sortedGroupedFavorites[showId]) {
+      sortedGroupedFavorites[showId] = {
+        ...groupedFavorites[showId],
+        seasons: {},
+      };
+    }
+
+    if (!sortedGroupedFavorites[showId].seasons[seasonId]) {
+      sortedGroupedFavorites[showId].seasons[seasonId] = {
+        seasonTitle: seasonTitle,
+        episodes: [],
+      };
+    }
+
+    sortedGroupedFavorites[showId].seasons[seasonId].episodes.push(episode);
+  });
   const removeFromFavorites = (episodeToRemove) => {
     const updatedFavorites = favorites.filter(
       (favorite) => favorite.episode.id !== episodeToRemove.id
@@ -77,7 +111,7 @@ const FavoritesList = ({ favorites, setFavorites }) => {
         <option value="oldest">Oldest</option>
       </select>
       ;
-      {Object.entries(groupedFavorites).map(([showId, show]) => (
+      {Object.entries(sortedGroupedFavorites).map(([showId, show]) => (
         <div key={showId}>
           <h3>
             <Link to={`/shows/${showId}`}>{show.showTitle}</Link>
@@ -96,7 +130,7 @@ const FavoritesList = ({ favorites, setFavorites }) => {
                 </Link>
               </h4>
               <ul>
-                {sortedEpisodes(season.episodes).map(
+                {season.episodes.map(
                   (
                     episode //
                   ) => (

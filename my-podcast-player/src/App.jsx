@@ -18,7 +18,10 @@ function App() {
     if (storedFavorites) {
       setFavorites(storedFavorites);
     }
-
+    /*
+remembers and shows what episodes user listened all the way through: userProgress state remembers the progress
+ for each episode using their episodeId. progress stored in localStorage.
+*/
     const storedProgress = JSON.parse(localStorage.getItem("userProgress"));
     if (storedProgress) {
       setUserProgress(storedProgress);
@@ -40,7 +43,10 @@ function App() {
       }
     });
   }, [userProgress, favorites]);
-
+  /*
+option to "reset" all their progress, removing listening history:  the resetProgress function clears
+ the userProgress state and removes the userProgress and favorites data from localStorage.
+*/
   const resetProgress = () => {
     if (window.confirm("Are you sure you want to reset all progress?")) {
       setUserProgress({});
@@ -49,6 +55,11 @@ function App() {
       localStorage.removeItem("favorites");
     }
   };
+  /*
+   remembers the exact timestamp where user stopped listening within a 10 seconds accuracy of closing:
+     updateUserProgress function updates the userProgress state with the current time of the audio player.
+      which then is called on the onTimeUpdate event of the audio element in AudioPlayer component
+  */
   const updateUserProgress = (episodeId, currentTime) => {
     setUserProgress((prevProgress) => ({
       ...prevProgress,

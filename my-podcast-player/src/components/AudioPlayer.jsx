@@ -9,7 +9,11 @@ const AudioPlayer = ({
   setIsPlaying,
 }) => {
   const audioRef = useRef();
-
+/*
+ remembers and shows the timestamp location of where I left off any episode:
+  When  src or episodeId changes in AudioPlayer compo the useEffect hook sets 
+  the currentTime of the audio player to the stored progress for that episode.
+*/
   useEffect(() => {
     // Update audio player's currentTime based on user progress
     if (episodeId && userProgress && userProgress[episodeId]) {
